@@ -309,6 +309,32 @@ public class AuthenticationManager implements AuthTokenCallback.Callbacks {
         }
     }
 
+    public String loginWithAuthorizationCode(@NonNull String authorizationCode, @NonNull String accountName, @NonNull String accountType, @NonNull String authTokenType, @NonNull String redirectUri, boolean newAccount) {
+        validateAuthorizationCode(authorizationCode);
+        validateAccountName(accountName);
+        validateAccountType(accountType);
+        validateAuthTokenType(authTokenType);
+
+        Account account = new Account(accountName, accountType);
+        final long currentTime = System.currentTimeMillis();
+        OAuthToken response = mOAuthTokenService.getTokenWithAuthorizationCode(mClientId, mClientSecret, authorizationCode, redirectUri);
+        if (newAccount) {
+
+            if (DEBUG) {
+                Log.d(String.format(DEBUG_TAG, TAG), "Adding new account with account name " + accountName + " to AccountManager.");
+            }
+
+            mAccountManager.addAccountExplicitly(account, null, null);
+        }
+
+        if (DEBUG) {
+            Log.d(String.format(DEBUG_TAG, TAG), "Login was successful with authorization code.");
+        }
+
+        saveAuthentication(account, authTokenType, OAuthTokenService.GrantType.authorization_code, response, currentTime);
+        return response.getAuthToken();
+    }
+
     /**
      * Logs a user into the app by retrieving an auth token from the oauth service and saving it along with the account in {@link android.accounts.AccountManager}
      * @param userName - the userName of the user. Must NOT be null or empty
@@ -387,7 +413,8 @@ public class AuthenticationManager implements AuthTokenCallback.Callbacks {
         final String accountType = account.type;
 
         mAccountManager.removeAccount(account, new AccountManagerCallback<Boolean>() {
-            @Override public void run(AccountManagerFuture<Boolean> future) {
+            @Override
+            public void run(AccountManagerFuture<Boolean> future) {
                 if (!TextUtils.isEmpty(authToken)) {
 
                     if (DEBUG) {
@@ -476,6 +503,12 @@ public class AuthenticationManager implements AuthTokenCallback.Callbacks {
     private void validateAccountName(String accountName) {
         if (TextUtils.isEmpty(accountName)) {
             throw new IllegalArgumentException("Parameter accountName cannot be empty");
+        }
+    }
+
+    private void validateAuthorizationCode(String authorizationCode) {
+        if (TextUtils.isEmpty(authorizationCode)) {
+            throw new IllegalArgumentException("Parameter authorizationCode cannot be empty");
         }
     }
 

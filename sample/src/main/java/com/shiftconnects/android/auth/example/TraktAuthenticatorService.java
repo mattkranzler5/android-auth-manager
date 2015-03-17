@@ -22,9 +22,9 @@ import com.shiftconnects.android.auth.AccountAuthenticatorService;
 /**
  * Created by mattkranzler on 2/25/15.
  */
-public class ExampleAuthenticatorService extends AccountAuthenticatorService {
+public class TraktAuthenticatorService extends AccountAuthenticatorService {
 
     @Override protected AccountAuthenticator getAccountAuthenticator() {
-        return ExampleApplication.ACCOUNT_AUTHENTICATOR;
+        return ExampleApplication.TRAKT_ACCOUNT_AUTHENTICATOR;
     }
 }

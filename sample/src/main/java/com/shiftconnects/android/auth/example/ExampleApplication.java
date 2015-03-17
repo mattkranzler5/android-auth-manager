@@ -25,9 +25,12 @@ import com.shiftconnects.android.auth.AccountAuthenticator;
 import com.shiftconnects.android.auth.AuthenticationManager;
 import com.shiftconnects.android.auth.example.service.BitlyOAuthTokenService;
 import com.shiftconnects.android.auth.example.service.BitlyRetrofitService;
+import com.shiftconnects.android.auth.example.service.TraktOAuthTokenService;
 import com.shiftconnects.android.auth.example.util.GsonConverter;
 import com.shiftconnects.android.auth.util.AESCrypto;
 import com.shiftconnects.android.auth.util.AuthConstants;
+import com.shiftconnects.android.auth.util.Crypto;
+import com.uwetrottmann.trakt.v2.TraktV2;
 
 import retrofit.RestAdapter;
 
@@ -36,15 +39,32 @@ import retrofit.RestAdapter;
  */
 public class ExampleApplication extends Application {
 
-    private static final String BITLY_CLIENT_ID = "9c8d2f12f6ab02e84f2692cc5acc01717ac807c1";
-    private static final String BITLY_CLIENT_SECRET = "49a498e19d3e92e23749b43af77b1663d447bb3c";
+    private static final String BITLY_CLIENT_ID = "your_client_id";
+    private static final String BITLY_CLIENT_SECRET = "your_client_secret";
 
-    public static AccountAuthenticator ACCOUNT_AUTHENTICATOR;
-    public static AuthenticationManager AUTHENTICATION_MANAGER;
+    public static final String TRAKT_CLIENT_ID = "your_client_id";
+    public static final String TRAKT_CLIENT_SECRET = "your_client_secret";
+
+    private static Crypto AES_CRYPTO;
+
+    public static final String BITLY_ACCOUNT = "com.bitly.ACCOUNT_TYPE";
+    public static final String BITLY_AUTH_TOKEN = "com.bitly.AUTH_TOKEN_TYPE";
+    public static AccountAuthenticator BITLY_ACCOUNT_AUTHENTICATOR;
+    public static AuthenticationManager BITLY_AUTHENTICATION_MANAGER;
     public static BitlyRetrofitService BITLY_SERVICE;
+
+    // Trakt
+    public static final String TRAKT_ACCOUNT = "tv.trakt.ACCOUNT_TYPE";
+    public static final String TRAKT_AUTH_TOKEN = "tv.trakt.AUTH_TOKEN_TYPE";
+    public static AccountAuthenticator TRAKT_ACCOUNT_AUTHENTICATOR;
+    public static AuthenticationManager TRAKT_AUTHENTICATION_MANAGER;
+
+    public static TraktV2 TRAKT;
 
     @Override public void onCreate() {
         super.onCreate();
+
+        AES_CRYPTO = new AESCrypto(getSharedPreferences("crypto", Context.MODE_PRIVATE));
 
         BITLY_SERVICE = new RestAdapter.Builder()
                 .setEndpoint("https://api-ssl.bitly.com")
@@ -55,18 +75,34 @@ public class ExampleApplication extends Application {
 
         AuthConstants.setDebug(true);
 
-        AUTHENTICATION_MANAGER = new AuthenticationManager(
+        BITLY_AUTHENTICATION_MANAGER = new AuthenticationManager(
                 AccountManager.get(this),
                 new BitlyOAuthTokenService(BITLY_SERVICE),
-                new AESCrypto(getSharedPreferences("crypto", Context.MODE_PRIVATE)),
+                AES_CRYPTO,
                 BITLY_CLIENT_ID,
                 BITLY_CLIENT_SECRET
         );
 
-        ACCOUNT_AUTHENTICATOR = new AccountAuthenticator(
+        BITLY_ACCOUNT_AUTHENTICATOR = new AccountAuthenticator(
                 this,
-                ExampleLoginActivity.class,
-                AUTHENTICATION_MANAGER
+                BitlyLoginActivity.class,
+                BITLY_AUTHENTICATION_MANAGER
         );
+
+        TRAKT_AUTHENTICATION_MANAGER = new AuthenticationManager(
+                AccountManager.get(this),
+                new TraktOAuthTokenService(),
+                AES_CRYPTO,
+                TRAKT_CLIENT_ID,
+                TRAKT_CLIENT_SECRET
+        );
+
+        TRAKT_ACCOUNT_AUTHENTICATOR = new AccountAuthenticator(
+                this,
+                TraktOAuthActivity.class,
+                TRAKT_AUTHENTICATION_MANAGER
+        );
+
+        TRAKT = new TraktV2().setApiKey(TRAKT_CLIENT_ID);
     }
 }

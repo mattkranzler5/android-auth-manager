@@ -28,7 +28,6 @@ import android.widget.EditText;
 
 import com.shiftconnects.android.auth.AuthenticationManager;
 import com.shiftconnects.android.auth.example.model.ShortenedUrl;
-import com.shiftconnects.android.auth.example.util.Constants;
 
 /**
  * This is an example of an authenticated activity. It will attempt to authenticate in {@link #onCreate(android.os.Bundle)} and
@@ -36,9 +35,9 @@ import com.shiftconnects.android.auth.example.util.Constants;
  * with the login screen to login. Upon successful login a call to {@link #onAuthenticationSuccessful(String)} with the
  * auth token will be called.
  */
-public class ExampleAuthenticatedActivity extends Activity implements AuthenticationManager.Callbacks, View.OnClickListener {
+public class BitlyAuthenticatedActivity extends Activity implements AuthenticationManager.Callbacks, View.OnClickListener {
 
-    private static final String TAG = ExampleAuthenticatedActivity.class.getSimpleName();
+    private static final String TAG = BitlyAuthenticatedActivity.class.getSimpleName();
 
     private EditText mLongUrl;
     private EditText mShortUrl;
@@ -64,26 +63,26 @@ public class ExampleAuthenticatedActivity extends Activity implements Authentica
                 shortenUrl();
             }
         });
-        ExampleApplication.AUTHENTICATION_MANAGER.addCallbacks(this);
+        ExampleApplication.BITLY_AUTHENTICATION_MANAGER.addCallbacks(this);
         if (TextUtils.isEmpty(mAuthToken)) {
             authenticate();
         }
     }
 
     private void logout() {
-        Account loggedInAccount = ExampleApplication.AUTHENTICATION_MANAGER.getSingleAccountForType(Constants.ACCOUNT_TYPE);
+        Account loggedInAccount = ExampleApplication.BITLY_AUTHENTICATION_MANAGER.getSingleAccountForType(ExampleApplication.BITLY_ACCOUNT);
         if (loggedInAccount != null) {
-            ExampleApplication.AUTHENTICATION_MANAGER.logout(loggedInAccount, Constants.AUTH_TOKEN_TYPE);
+            ExampleApplication.BITLY_AUTHENTICATION_MANAGER.logout(loggedInAccount, ExampleApplication.BITLY_AUTH_TOKEN);
         }
     }
 
     @Override protected void onDestroy() {
         super.onDestroy();
-        ExampleApplication.AUTHENTICATION_MANAGER.removeCallbacks(this);
+        ExampleApplication.BITLY_AUTHENTICATION_MANAGER.removeCallbacks(this);
     }
 
     private void authenticate() {
-        ExampleApplication.AUTHENTICATION_MANAGER.authenticate(this, Constants.ACCOUNT_TYPE, Constants.AUTH_TOKEN_TYPE);
+        ExampleApplication.BITLY_AUTHENTICATION_MANAGER.authenticate(this, ExampleApplication.BITLY_ACCOUNT, ExampleApplication.BITLY_AUTH_TOKEN);
     }
 
     @Override public void onAuthenticationCanceled() {

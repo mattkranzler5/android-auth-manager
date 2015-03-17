@@ -14,7 +14,23 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 
-        <activity android:name=".ExampleAuthenticatedActivity">
+        <activity android:name=".BitlyAuthenticatedActivity">
+
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+<!---->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+
+        </activity>
+
+        <activity
+            android:name=".BitlyLoginActivity"
+            android:label="@string/bitly_login_activity"
+            android:windowSoftInputMode="adjustResize|stateVisible"
+            android:exported="true"/>
+
+        <activity android:name=".TraktUserDisplayActivity">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,17 +41,25 @@
         </activity>
 
         <activity
-            android:name=".ExampleLoginActivity"
-            android:label="@string/app_name"
+            android:name=".TraktOAuthActivity"
+            android:label="@string/trakt_login_activity"
             android:windowSoftInputMode="adjustResize|stateVisible"
             android:exported="true"/>
 
-        <service android:name=".ExampleAuthenticatorService" android:exported="false">
+        <service android:name=".BitlyAuthenticatorService" android:exported="false">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
             <meta-data android:name="android.accounts.AccountAuthenticator"
-                       android:resource="@xml/authenticator" />
+                       android:resource="@xml/bitly_authenticator" />
+        </service>
+
+        <service android:name=".TraktAuthenticatorService" android:exported="false">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator" />
+            </intent-filter>
+            <meta-data android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/trakt_authenticator" />
         </service>
     </application>
 

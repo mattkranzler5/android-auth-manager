@@ -27,11 +27,13 @@ import com.shiftconnects.android.auth.model.OAuthToken;
  */
 @SuppressWarnings("unused")
 public interface OAuthTokenService<T extends OAuthToken> {
+    T getTokenWithAuthorizationCode(String clientId, String clientSecret, String authorizationCode, String redirectUri);
     T getTokenWithPassword(String clientId, String clientSecret, String userName, String password);
     T getTokenWithRefreshToken(String clientId, String clientSecret, String refreshToken);
     T getTokenWithClientCredentials(String clientId, String clientSecret);
 
-    public static enum GrantType {
+    enum GrantType {
+        authorization_code,
         password,
         refresh_token,
         client_credentials

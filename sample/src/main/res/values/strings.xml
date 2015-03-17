@@ -3,4 +3,10 @@
     <string name="hint_long_url">URL to shorten</string>
     <string name="shorten_button_label">Shorten</string>
     <string name="logout_button_label">Logout</string>
+
+    <string name="bitly_login_activity">Bitly Auth</string>
+    <string name="trakt_login_activity">Trakt Auth</string>
+
+    <string name="bitly_account_type">Bitly</string>
+    <string name="trakt_account_type">Trakt</string>
 </resources>

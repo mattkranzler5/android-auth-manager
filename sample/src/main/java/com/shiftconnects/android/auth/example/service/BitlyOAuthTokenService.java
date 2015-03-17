@@ -35,6 +35,11 @@ public class BitlyOAuthTokenService implements OAuthTokenService<BitlyOAuthToken
         mRetrofitService = bitlyRetrofitService;
     }
 
+    @Override
+    public BitlyOAuthToken getTokenWithAuthorizationCode(String clientId, String clientSecret, String authorizationCode, String redirectUri) {
+        throw new UnsupportedOperationException("This service does not support authorization code auth");
+    }
+
     @Override public BitlyOAuthToken getTokenWithPassword(String clientId, String clientSecret, String userName, String password) {
         String clientIdAndSecret = clientId + ":" + clientSecret;
         String authorizationHeader = BitlyRetrofitService.BASIC + " " + Base64.encodeToString(clientIdAndSecret.getBytes(Charset.forName("UTF-8")), Base64.NO_WRAP);

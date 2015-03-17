@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
-package com.shiftconnects.android.auth.example.util;
+package com.shiftconnects.android.auth.example;
+
+import com.shiftconnects.android.auth.AccountAuthenticator;
+import com.shiftconnects.android.auth.AccountAuthenticatorService;
 
 /**
  * Created by mattkranzler on 2/25/15.
  */
-public class Constants {
-    public static final String ACCOUNT_TYPE = "com.shiftconnects.android.auth.example.ACCOUNT_TYPE";
-    public static final String AUTH_TOKEN_TYPE = "com.shiftconnects.android.auth.example.AUTH_TOKEN_TYPE";
+public class BitlyAuthenticatorService extends AccountAuthenticatorService {
+
+    @Override protected AccountAuthenticator getAccountAuthenticator() {
+        return ExampleApplication.BITLY_ACCOUNT_AUTHENTICATOR;
+    }
 }

@@ -42,7 +42,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.shiftconnects.android.auth.AuthenticatorActivity;
-import com.shiftconnects.android.auth.example.util.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +50,7 @@ import java.util.List;
 /**
  * A login screen that offers login via email/password.
  */
-public class ExampleLoginActivity extends AccountAuthenticatorActivity implements AuthenticatorActivity, LoaderCallbacks<Cursor> {
+public class BitlyLoginActivity extends AccountAuthenticatorActivity implements AuthenticatorActivity, LoaderCallbacks<Cursor> {
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -260,7 +259,7 @@ public class ExampleLoginActivity extends AccountAuthenticatorActivity implement
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         ArrayAdapter<String> adapter =
-                new ArrayAdapter<String>(ExampleLoginActivity.this,
+                new ArrayAdapter<String>(BitlyLoginActivity.this,
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
         mEmailView.setAdapter(adapter);
@@ -283,11 +282,11 @@ public class ExampleLoginActivity extends AccountAuthenticatorActivity implement
         @Override
         protected Intent doInBackground(Void... params) {
             try {
-                String authToken = ExampleApplication.AUTHENTICATION_MANAGER.loginWithUserNamePassword(
+                String authToken = ExampleApplication.BITLY_AUTHENTICATION_MANAGER.loginWithUserNamePassword(
                         mEmail,
                         mPassword,
-                        Constants.ACCOUNT_TYPE,
-                        Constants.AUTH_TOKEN_TYPE,
+                        ExampleApplication.BITLY_ACCOUNT,
+                        ExampleApplication.BITLY_AUTH_TOKEN,
                         true
                 );
                 final Intent intent = new Intent();
